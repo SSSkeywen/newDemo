@@ -32,6 +32,16 @@ import modify from '@/components/Mine/modify'
 import Login from '@/components/Login/Login'
 import register from '@/components/Login/register'
 
+//文飞，
+//1-13
+// 信用图条  
+import Whome from "@/components/headline/page/home"
+import newsSearch from "@/components/headline/page/newsSearch"
+import newSearchTwo from "@/components/headline/page/newSearchTwo"
+import newsMessage from "@/components/headline/page/newsMessage"
+import myCollect from "@/components/headline/page/myCollect"
+import myComment from "@/components/headline/page/myComment"
+
 
 
 export default new Router({
@@ -95,6 +105,14 @@ export default new Router({
       path: '/register',
       name: register,
       component: register
-    }
+    },
+
+    //信用头条  
+    {path: '/Whome',name: Whome,component: Whome},
+    {path: '/newsSearch',name: newsSearch,component: newsSearch},
+    {path: '/newSearchTwo',name: newSearchTwo,component: newSearchTwo},
+    {path: '/newsMessage',name: newsMessage,component: newsMessage},
+    {path: '/myCollect',name: myCollect,component: myCollect},
+    {path: '/myComment',name: myComment,component: myComment},
   ]
 })

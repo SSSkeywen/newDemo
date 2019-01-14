@@ -39,4 +39,9 @@ h6 {
 }
 .clearfix:after { content: ""; display: block; visibility: hidden; height: 0; clear: both; }
 .clearfix { zoom: 1; }
+.new-box{
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
 </style>
