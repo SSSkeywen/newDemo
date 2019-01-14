@@ -179,13 +179,13 @@
         </li>
       </ul>
     </div>
-    <div class="news-app-download">
+    <div class="news-app-download"  v-if="isShowDwonLoad">
       <div class="news-app-content">
         <div class="news-app-img">
           <img :src="appImgSrc" width="100%">
         </div>
         <p>查看更多专题，欢迎下载信用头条APP</p>
-        <div class="news-app-close">
+        <div class="news-app-close" @click="closeDwonLoadFn">
           <img :src="closeIconSrc" width="100%">
         </div>
       </div>
@@ -220,13 +220,31 @@ export default {
       goHomeIconSrc: require("../../../../static/headlineImg/icon@goHome.png"),
       toTopIconSrc: require("../../../../static/headlineImg/icon@toTop.png"),
       goodOneIconSrc: require("../../../../static/headlineImg/icon@goodOne.png"),
-      loanImgSrc: require("../../../../static/images/icon_consumer_loan.png")
+      loanImgSrc: require("../../../../static/images/icon_consumer_loan.png"),
+      isShowDwonLoad:true,
     };
   },
   components: {
     contentList
   },
+  created(){
+
+  },
   methods: {
+      //   文章详细信息
+    getNewsMessage() {
+      var params = new URLSearchParams();
+      params.append("pageNum", "1");
+      params.append("pageSize", "5");
+      this.$ajax({
+        method: "post",
+        url: this.$url + "userInformation/queryById",
+        params
+      }).then(data => {
+        // this.arr = data.data.data.list;
+      });
+    },
+
     goBank() {
       this.$router.go(-1);
     },
@@ -245,7 +263,12 @@ export default {
         var sTop = document.body || document.documentElement;
         // console.log(this.$refs.newsBox.scrollTop)
         sTop.scrollIntoView();
-    }
+    },
+
+    // 关闭下载
+    closeDwonLoadFn(){
+        this.isShowDwonLoad = false
+    },
   }
 };
 </script>
@@ -611,6 +634,9 @@ header {
 	letter-spacing: 0px;
 	color: #666666;
     margin-top: 22px;
+}
+.comment-content-time P:first-child{
+    margin-right:20px;
 }
 .comment-comment{
     width: 580px;

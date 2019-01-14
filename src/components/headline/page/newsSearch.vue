@@ -77,6 +77,25 @@ export default {
             contentList
         },
   methods: {
+    //   查询信息
+    selectMessage() {
+      var params = new URLSearchParams();
+      params.append("pageNum", "1");
+      params.append("pageSize", "5");
+      this.$ajax({
+        method: "post",
+        url: this.$url + "userInformation/queryById",
+        params
+      }).then(data => {
+        // this.arr = data.data.data.list;
+      });
+    },
+
+    //跳转到文章页面
+    lookMessagePage() {
+      this.$router.push({ path: "/newsMessage", query: { id: "111" } });
+    },
+
     goBank() {
       this.$router.go(-1);
     },

@@ -7,14 +7,15 @@
       <div class="h-header-search">
         <p>我的收藏</p>
       </div>
-      <div class="h-header-search-gps">
-        <p>{{compile}}</p>
+      <div class="h-header-search-gps"  @click="compileFn">
+        <p v-if="!delectContent">{{compile}}</p>
+        <p v-else>取消</p>
       </div>
     </header>
     <ul class="h-list-ul">
       <li class="h-list-li" @click="lookMessagePage()">
         <contentList></contentList>
-        <p class="delect">删除</p>
+        <p v-if="delectContent" class="delect" @click.stop="delectFn">删除</p>
       </li>
     </ul>
   </div>
@@ -30,13 +31,34 @@ export default {
       openNavImgSrc: require("../../../../static/headlineImg/icon@openNav.png"),
       bankImgSrc: require("../../../../static/headlineImg/icon@bank.png"),
       openAllMessage: true,
-      compile:'编辑'
+      compile:'编辑',
+      delectContent:false
     };
   },
   components: {
     contentList
   },
   methods: {
+      //   查询收藏信息
+    getCollectMessage() {
+      var params = new URLSearchParams();
+      params.append("pageNum", "1");
+      params.append("pageSize", "5");
+      this.$ajax({
+        method: "post",
+        url: this.$url + "userInformation/queryById",
+        params
+      }).then(data => {
+        // this.arr = data.data.data.list;
+      });
+    },
+
+    //删除收藏页面
+    delectFn(){
+        alert(11)
+    },
+
+
     goBank() {
       this.$router.go(-1);
     },
@@ -57,6 +79,11 @@ export default {
     //
     searchMessage() {
       this.$router.push({ path: "/newSearchTwo", query: { content: "111" } });
+    },
+
+    //是否编剧方法
+    compileFn(){
+        this.delectContent = !this.delectContent
     }
   }
 };

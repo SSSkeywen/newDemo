@@ -20,10 +20,10 @@
       </div>
     </div>
     <div class="comment-btn">
-      <p>取消</p>
+      <p @click="cancelCommentFn">取消</p>
       <p>发布</p>
     </div>
-    <alertComponents></alertComponents>
+    <alertComponents @cancelAlert="cancelAlert" @sureCancleFn="sureCancleFn" :isShowAlert="isShowAlert"></alertComponents>
   </div>
 </template>
 
@@ -37,7 +37,8 @@ export default {
       openNavImgSrc: require("../../../../static/headlineImg/icon@openNav.png"),
       bankImgSrc: require("../../../../static/headlineImg/icon@bank.png"),
       openAllMessage: true,
-      compile: "编辑"
+      compile: "编辑",
+      isShowAlert:false,
     };
   },
   components:{
@@ -50,6 +51,21 @@ export default {
 
     openAllMessageFn() {
       this.openAllMessage = !this.openAllMessage;
+    },
+
+    //取消发布
+    cancelCommentFn(){
+      this.isShowAlert = true
+    },
+
+    //取消取消发布
+    cancelAlert(){
+      this.isShowAlert = false
+    },
+
+    //确定取消
+    sureCancleFn(){
+      this.$router.go(-1);
     }
   }
 };

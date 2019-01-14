@@ -21,12 +21,15 @@
 export default {
   data() {
     return {
-      isShowAlert: true
+    //   isShowAlert: true
     };
   },
+  props:['isShowAlert'],
   methods: {
     cancel() {
-      this.isShowAlert = false;
+        // alert(this.isShowAlert)
+    //   this.isShowAlert = false;
+    this.$emit("cancelAlert");
     },
 
     openAlert() {
@@ -34,8 +37,8 @@ export default {
     },
 
     sureBtn() {
-      this.$emit("goExitFn");
-      this.isShowAlert = false;
+      this.$emit("sureCancleFn");
+    //   this.isShowAlert = false;
     }
   }
 };
