@@ -14,6 +14,9 @@ Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 Vue.prototype.$url = "/loansupermarket-api/usercenter/v1.0.1/web/"
 
+// 头条
+Vue.prototype.$urlTop = "/loansupermarket-api/topnews/v1.0.1/web/"
+
 
 /* eslint-disable no-new */
 new Vue({

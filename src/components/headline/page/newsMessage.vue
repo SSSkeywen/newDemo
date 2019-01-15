@@ -222,25 +222,31 @@ export default {
       goodOneIconSrc: require("../../../../static/headlineImg/icon@goodOne.png"),
       loanImgSrc: require("../../../../static/images/icon_consumer_loan.png"),
       isShowDwonLoad:true,
+      messageData:'',
     };
   },
   components: {
     contentList
   },
   created(){
-
+    this.messageData = JSON.parse(this.$route.query.content);
+    console.log(this.messageData)
+    this.getNewsMessage()
   },
   methods: {
       //   文章详细信息
     getNewsMessage() {
       var params = new URLSearchParams();
-      params.append("pageNum", "1");
-      params.append("pageSize", "5");
+      params.append("upperId", "");   //上一篇文章id
+      params.append("id", this.messageData.newsId);        //当前文章id
+      params.append("lowerId", "");   //下一篇文章id
+      params.append("menu", "首页");      //频道名
       this.$ajax({
         method: "post",
-        url: this.$url + "userInformation/queryById",
+        url: this.$urlTop + "newsSortInformation/queryById",
         params
       }).then(data => {
+        console.log(data)
         // this.arr = data.data.data.list;
       });
     },

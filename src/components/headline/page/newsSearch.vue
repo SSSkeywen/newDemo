@@ -16,7 +16,7 @@
         <p>搜索</p>
       </div>
     </header>
-    <div v-if="false">
+    <div v-if="true">
       <ul class="ns-nav">
         <li>
           <p>余额记账法</p>

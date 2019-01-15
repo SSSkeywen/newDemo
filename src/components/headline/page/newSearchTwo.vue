@@ -16,22 +16,13 @@
     <div style="width:100%;height:45px;"></div>
     <nav class="h-nav" style="background-color: transparent;" v-if="openAllMessage">
       <ul>
-        <li>
+        <li @click="goHomePage">
           <p>首页</p>
         </li>
-        <li>
-          <p>信用卡</p>
+        <li v-for="(item,index) in navLists" :key="index" @click="searchMessage(index)">
+          <p :class="item.isSelectShow?'select-nav':''">{{item.newsChannelName}}</p>
         </li>
-        <li class="select-nav">
-          <p>信用卡</p>
-        </li>
-        <li>
-          <p>信用卡</p>
-        </li>
-        <li>
-          <p>信用卡</p>
-        </li>
-        <li @click="openAllMessageFn">
+        <li @click="openAllMessageFn" v-if="navLists.length>11">
           <img :src="openNavImgSrc" alt>
         </li>
       </ul>
@@ -39,74 +30,11 @@
     <div v-else class="h-nav-two">
       <nav class="h-nav">
         <ul>
-          <li>
-            <p class="select-nav">首页</p>
+          <li  @click="goHomePage">
+            <p>首页</p>
           </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
-          </li>
-          <li>
-            <p>信用卡</p>
+          <li v-for="(item,index) in navLists" :key="index" @click="searchMessage(index)">
+            <p :class="item.isSelectShow?'select-nav':''">{{item.newsChannelName}}</p>
           </li>
           <li @click="openAllMessageFn">
             <img :src="openNavImgSrc" class="to-dwon">
@@ -116,13 +44,9 @@
     </div>
     <div class="h-top-list">
       <ul>
-        <li>
+        <li v-for="(item,index) in homeTopLists" :key="index">
           <p class="h-top-icon">置顶</p>
-          <p class="h-top-content">余额记账法，记资产的记账法</p>
-        </li>
-        <li>
-          <p class="h-top-icon">置顶</p>
-          <p class="h-top-content">余额记账法，记资产的记账法</p>
+          <p class="h-top-content">{{item.newsTitle}}</p>
         </li>
       </ul>
     </div>
@@ -144,13 +68,90 @@ export default {
       openNavImgSrc: require("../../../../static/headlineImg/icon@openNav.png"),
       bankImgSrc: require("../../../../static/headlineImg/icon@bank.png"),
       navImgSrc: require("../../../../static/headlineImg/icon@nav.png"),
-      openAllMessage: true
+      openAllMessage: true,
+      navLists: [],
+      contentLists: [],
+      numberOfElements: "",
+      homeTopLists:[]
     };
   },
   components: {
     contentList
   },
+  created() {
+    this.contentLists = JSON.parse(this.$route.query.content);
+    // console.log(content)
+    this.getHomeData();
+    this.getHomePageTopList();
+  },
   methods: {
+    //   获取首页信息
+    getHomeData() {
+      let params = new URLSearchParams();
+      params.append("pageNumber", "1");
+      params.append("pageSize", "10");
+      this.$ajax({
+        method: "post",
+        url: this.$urlTop + "newsChannelList/queryPage",
+        params
+      }).then(data => {
+        for (let item of data.data.data.content) {
+          item.isSelectShow = false;
+          if (item.newsChannelName == this.contentLists.newsChannelName) {
+            item.isSelectShow = true;
+          }
+        }
+        console.log(data.data.data.content);
+        this.navLists = data.data.data.content;
+        this.numberOfElements = data.data.data.numberOfElements;
+      });
+    },
+
+    //   获取首页置顶文章信息
+    getHomePageTopList() {
+      let params = new URLSearchParams();
+      params.append("pageNumber", "1");
+      params.append("pageSize", "2");
+      this.$ajax({
+        method: "post",
+        url: this.$urlTop + "newsSortInformation/queryPageTop",
+        params
+      }).then(data => {
+        this.homeTopLists = data.data.data.content;
+      });
+    },
+
+    //切换nav内容方法
+    searchMessage(index) {
+        for(let item of this.navLists){
+          item.isSelectShow = false;
+        }
+        this.navLists[index].isSelectShow = true;
+        this.getHomePageList(this.navLists[index].newsChannelName)
+    },
+
+    //   获取首页文章信息
+    getHomePageList(navContent) {
+      let params = new URLSearchParams();
+      params.append("titleOrKeyWord", navContent);
+      params.append("menu", navContent);
+      params.append("pageNumber", "1");
+      params.append("pageSize", "10");
+      this.$ajax({
+        method: "post",
+        url: this.$urlTop + "newsSortInformation/queryPageAnd",
+        params
+      }).then(data => {
+          console.log(data)
+        // this.navLists = data.data.data.content;
+      });
+    },
+
+    //
+    goHomePage(){
+      this.$router.push({ path: "/Whome"});
+    },
+
     openAllMessageFn() {
       this.openAllMessage = !this.openAllMessage;
     },
@@ -258,8 +259,8 @@ header {
   top: 90px;
   left: 0;
 }
-.h-nav-two .h-nav{
-    top: 0;
+.h-nav-two .h-nav {
+  top: 0;
 }
 .h-nav ul {
   display: flex;
@@ -327,6 +328,5 @@ header {
 }
 .to-dwon {
   transform: rotate(180deg);
-  
 }
 </style>
